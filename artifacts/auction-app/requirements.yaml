@@ -1,0 +1,17 @@
+packages:
+  "framer-motion": "For smooth page transitions and interactive micro-animations"
+  "date-fns": "For formatting countdown timers and relative dates elegantly"
+  "react-hook-form": "For robust form state management"
+  "@hookform/resolvers": "For integrating Zod validation with react-hook-form"
+  "clsx": "For composing CSS classes conditionally"
+  "tailwind-merge": "For merging Tailwind CSS classes seamlessly"
+
+images:
+  - path: "artifacts/auction-app/public/images/hero-bg.png"
+    description: "Abstract, elegant gradient mesh in vibrant orange and dark charcoal tones, symbolizing energy, bidding, and premium auctions. Soft light leaks, modern, clean, minimal noise texture."
+    aspect_ratio: "16:9"
+
+notes:
+  - Auth uses JWT tokens in localStorage ('auction_token').
+  - All API calls intercept fetch to attach the Authorization header.
+  - Orval generated hooks from @workspace/api-client-react are utilized.

@@ -1,0 +1,209 @@
+Project Title: Online Auction System
+
+Objective:
+Build a web-based Online Auction System where users can register, create auctions, place bids on products, and see real-time bidding updates. The system should use Node.js for the backend, MySQL for the database, and HTML/CSS/JavaScript for the frontend.
+
+Technology Stack:
+Frontend:
+
+* HTML
+* CSS
+* JavaScript
+
+Backend:
+
+* Node.js
+* Express.js
+
+Database:
+
+* MySQL
+
+Additional Tools:
+
+* Socket.io for real-time bidding
+* Multer for image uploads
+* bcrypt for password encryption
+* express-session for login sessions
+
+Project Architecture:
+
+1. Folder Structure
+   The project should be organized in a modular structure so that each part of the system is separated by responsibility.
+
+online-auction-system/
+
+* server.js (main server file)
+* package.json
+* config/ (database configuration)
+* models/ (database queries and table models)
+* controllers/ (business logic)
+* routes/ (API endpoints)
+* middleware/ (authentication and security)
+* public/ (static files like CSS, JS, images)
+* views/ (HTML pages)
+* uploads/ (auction product images)
+* database/ (SQL scripts)
+
+2. Database Design
+
+Create three main tables in MySQL.
+
+Users Table:
+Stores user information such as username, email, and password.
+
+Auctions Table:
+Stores auction product details including title, description, starting price, current price, end time, and seller.
+
+Bids Table:
+Stores bid history with auction ID, user ID, bid amount, and bid time.
+
+Relationships:
+
+* One user can create many auctions.
+* One auction can have many bids.
+* Each bid belongs to a specific user and auction.
+
+3. Backend Development (Node.js + Express)
+
+Create an Express server in server.js.
+
+The server should:
+
+* Connect to MySQL
+* Serve static frontend files
+* Handle API routes
+* Use middleware for authentication
+* Use Socket.io for real-time updates
+
+Example responsibilities:
+
+* User registration and login
+* Create auction
+* Fetch auction list
+* Place bids
+* Update highest bid
+
+4. Routes
+
+Create separate route files for different functionalities.
+
+Auth Routes:
+
+* POST /register
+* POST /login
+
+Auction Routes:
+
+* GET /auctions
+* GET /auction/:id
+* POST /create-auction
+
+Bid Routes:
+
+* POST /place-bid
+
+Admin Routes:
+
+* Manage users
+* Manage auctions
+
+5. Controllers
+
+Controllers contain the business logic.
+
+Auth Controller:
+
+* Register user
+* Login user
+* Encrypt password
+
+Auction Controller:
+
+* Create auction
+* Retrieve auctions
+* Get auction details
+
+Bid Controller:
+
+* Place bid
+* Update highest bid
+* Store bid history
+
+6. Frontend Pages
+
+Create the following HTML pages.
+
+Home Page:
+Shows latest auctions.
+
+Login Page:
+Allows users to login.
+
+Register Page:
+Allows new users to create an account.
+
+Auction List Page:
+Displays all available auctions.
+
+Auction Details Page:
+Shows product details and allows users to place bids.
+
+Create Auction Page:
+Allows sellers to upload products and start auctions.
+
+Dashboard Page:
+Shows user's auctions and bids.
+
+7. Real-Time Bidding (Socket.io)
+
+Implement Socket.io so that when a user places a bid:
+
+* The server receives the bid
+* The database updates the current price
+* The server broadcasts the new bid
+* All connected users see the updated bid instantly
+
+This creates a real-time auction experience.
+
+8. Image Upload
+
+Use Multer to upload product images.
+
+Images should be stored inside the uploads folder and referenced in the auction database.
+
+9. Auction Timer
+
+Each auction should have an end time. A timer should count down on the frontend. When the time expires:
+
+* The auction closes
+* The highest bidder becomes the winner.
+
+10. Security Features
+
+* Encrypt passwords using bcrypt
+* Protect routes using authentication middleware
+* Validate user input
+* Prevent bids lower than the current price
+
+11. Additional Features (Optional)
+
+* Email notifications for winning bids
+* Watchlist for favorite auctions
+* Payment gateway integration
+* Admin dashboard
+* Auction categories
+* Analytics dashboard
+
+System Flow:
+
+1. User registers or logs in.
+2. A seller creates an auction with product details.
+3. The auction is listed on the auction page.
+4. Users open the auction details page.
+5. Users place bids on the product.
+6. The system updates bids in real time using Socket.io.
+7. When the auction timer ends, the highest bidder wins.
+
+Outcome:
+The system provides a complete online auction platform where users can buy and sell products through competitive bidding with real-time updates.

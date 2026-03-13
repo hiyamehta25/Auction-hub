@@ -1,22 +1,28 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Online Auction System API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: auctions
+    description: Auction management
+  - name: bids
+    description: Bid management
+  - name: users
+    description: User management
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +30,252 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout user
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auctions:
+    get:
+      operationId: getAuctions
+      tags: [auctions]
+      summary: Get all active auctions
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: number
+        - name: limit
+          in: query
+          schema:
+            type: number
+      responses:
+        "200":
+          description: List of auctions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuctionsListResponse"
+    post:
+      operationId: createAuction
+      tags: [auctions]
+      summary: Create a new auction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAuctionRequest"
+      responses:
+        "201":
+          description: Auction created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Auction"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auctions/{id}:
+    get:
+      operationId: getAuction
+      tags: [auctions]
+      summary: Get auction details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Auction details with bids
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuctionDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auctions/{id}/image:
+    post:
+      operationId: uploadAuctionImage
+      tags: [auctions]
+      summary: Upload auction image
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Image uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Auction"
+
+  /bids:
+    post:
+      operationId: placeBid
+      tags: [bids]
+      summary: Place a bid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaceBidRequest"
+      responses:
+        "201":
+          description: Bid placed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bid"
+        "400":
+          description: Invalid bid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /users/dashboard:
+    get:
+      operationId: getDashboard
+      tags: [users]
+      summary: Get user dashboard data
+      responses:
+        "200":
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +283,199 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        username:
+          type: string
+        email:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, username, email, createdAt]
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+      required: [user, token]
+
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+      required: [username, email, password]
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required: [email, password]
+
+    Auction:
+      type: object
+      properties:
+        id:
+          type: number
+        title:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        startingPrice:
+          type: number
+        currentPrice:
+          type: number
+        category:
+          type: string
+        endTime:
+          type: string
+          format: date-time
+        sellerId:
+          type: number
+        sellerUsername:
+          type: string
+        status:
+          type: string
+          enum: [active, ended, cancelled]
+        bidCount:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, title, description, startingPrice, currentPrice, category, endTime, sellerId, sellerUsername, status, bidCount, createdAt]
+
+    AuctionDetail:
+      type: object
+      properties:
+        auction:
+          $ref: "#/components/schemas/Auction"
+        bids:
+          type: array
+          items:
+            $ref: "#/components/schemas/Bid"
+        winner:
+          $ref: "#/components/schemas/User"
+          nullable: true
+      required: [auction, bids]
+
+    AuctionsListResponse:
+      type: object
+      properties:
+        auctions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Auction"
+        total:
+          type: number
+        page:
+          type: number
+        limit:
+          type: number
+      required: [auctions, total, page, limit]
+
+    CreateAuctionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        startingPrice:
+          type: number
+          minimum: 0.01
+        category:
+          type: string
+        endTime:
+          type: string
+          format: date-time
+      required: [title, description, startingPrice, category, endTime]
+
+    Bid:
+      type: object
+      properties:
+        id:
+          type: number
+        auctionId:
+          type: number
+        userId:
+          type: number
+        username:
+          type: string
+        amount:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, auctionId, userId, username, amount, createdAt]
+
+    PlaceBidRequest:
+      type: object
+      properties:
+        auctionId:
+          type: number
+        amount:
+          type: number
+      required: [auctionId, amount]
+
+    DashboardResponse:
+      type: object
+      properties:
+        myAuctions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Auction"
+        myBids:
+          type: array
+          items:
+            $ref: "#/components/schemas/Bid"
+        wonAuctions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Auction"
+        stats:
+          type: object
+          properties:
+            activeAuctions:
+              type: number
+            totalBids:
+              type: number
+            auctionsWon:
+              type: number
+          required: [activeAuctions, totalBids, auctionsWon]
+      required: [myAuctions, myBids, wonAuctions, stats]

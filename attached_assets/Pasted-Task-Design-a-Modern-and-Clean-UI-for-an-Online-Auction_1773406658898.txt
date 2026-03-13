@@ -1,0 +1,146 @@
+Task: Design a Modern and Clean UI for an Online Auction System Web Application.
+
+Objective:
+Create a visually appealing, modern, minimal, and user-friendly interface for an Online Auction System. The UI should look professional, clean, and easy to navigate, similar to modern platforms like eBay, Airbnb, or Stripe dashboards.
+
+Design Style:
+
+* Minimalistic and modern
+* Clean layout with lots of white space
+* Soft shadows and subtle borders
+* Rounded corners for cards and buttons
+* Smooth hover animations and transitions
+* Consistent spacing and alignment
+
+Color Palette:
+Primary Color: #FF6B35 (modern orange for auction/bidding energy)
+Secondary Color: #2C3E50 (dark blue/charcoal for text and headers)
+Background: #F8F9FB (light neutral background)
+Accent Color: #4CAF50 (green for highest bid or success)
+Error Color: #E74C3C
+
+Typography:
+
+* Font Family: Inter / Poppins / Roboto
+* Headings: Bold and clear
+* Body Text: Light and readable
+* Use clear hierarchy:
+  H1 – Page titles
+  H2 – Section titles
+  H3 – Card titles
+  Body – descriptions
+
+Spacing and Layout:
+
+* Use an 8px spacing system
+* Maintain consistent padding in cards
+* Use grid layout for auction items
+* Cards should have equal spacing and alignment
+* Avoid clutter
+
+Main Pages to Design:
+
+1. Homepage
+
+* Large hero section with a headline like "Bid. Win. Own."
+* Featured auctions section
+* Categories of auctions
+* Call-to-action button: "Start Bidding"
+* Clean navigation bar with login/register buttons
+
+2. Auction Listing Page
+
+* Grid layout of auction cards
+* Each card should contain:
+
+  * Product image
+  * Product title
+  * Current highest bid
+  * Countdown timer
+  * "Place Bid" button
+* Hover effect on cards
+
+3. Auction Details Page
+
+* Large product image gallery
+* Product details section
+* Current highest bid highlighted
+* Bid input field
+* Bid history section
+* Live countdown timer
+* Real-time bid updates indicator
+
+4. Create Auction Page
+
+* Simple clean form
+* Fields:
+
+  * Product title
+  * Description
+  * Starting price
+  * End time
+  * Image upload
+* Large primary submit button
+
+5. User Dashboard
+
+* Cards showing:
+
+  * Active auctions
+  * Bids placed
+  * Auctions won
+* Clean sidebar navigation
+
+6. Login & Register Pages
+
+* Centered authentication card
+* Minimal input fields
+* Social login icons (optional)
+* Clean validation messages
+
+UI Components to Include:
+
+* Auction cards
+* Bid input box
+* Countdown timer
+* Notification alerts
+* Buttons with hover animation
+* Search bar
+* Category filters
+* Pagination
+
+UX Enhancements:
+
+* Real-time bid updates
+* Smooth transitions
+* Loading skeletons for data
+* Responsive design (mobile + tablet + desktop)
+* Sticky navigation bar
+* Floating bid notification
+
+Microinteractions:
+
+* Bid button pulse animation
+* Timer countdown animation
+* Hover lift effect on cards
+* Success animation after placing a bid
+
+Responsive Design:
+Ensure the UI works perfectly on:
+
+* Desktop
+* Tablet
+* Mobile
+
+Use a mobile-first approach with collapsible navigation and responsive grid layouts.
+
+Design Inspiration:
+Use inspiration from:
+
+* eBay auction pages
+* Stripe dashboard UI
+* Airbnb card layouts
+* modern SaaS dashboards
+
+Goal:
+The final UI should look premium, modern, clean, and intuitive, making the auction experience exciting and easy for users.
