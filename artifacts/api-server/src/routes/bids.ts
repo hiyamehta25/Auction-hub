@@ -45,11 +45,6 @@ router.post("/", authenticateToken, async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    if (auction.sellerId === req.userId) {
-      res.status(400).json({ error: "You cannot bid on your own auction" });
-      return;
-    }
-
     const currentPrice = parseFloat(auction.currentPrice as unknown as string);
     if (bidAmount <= currentPrice) {
       res.status(400).json({ error: `Bid must be higher than current price of $${currentPrice.toFixed(2)}` });
