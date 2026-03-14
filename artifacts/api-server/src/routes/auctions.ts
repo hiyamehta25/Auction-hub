@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (allowed.includes(file.mimetype)) {
@@ -243,7 +243,19 @@ router.get("/:id", optionalAuth, async (req: Request, res: Response) => {
   }
 });
 
-router.post("/:id/image", authenticateToken, upload.single("image"), async (req: AuthRequest, res: Response) => {
+router.post("/:id/image", authenticateToken, (req: AuthRequest, res: Response, next) => {
+  upload.single("image")(req, res, (err) => {
+    if (err) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        res.status(400).json({ error: "Image is too large. Maximum size is 10MB." });
+      } else {
+        res.status(400).json({ error: err.message || "Image upload failed" });
+      }
+      return;
+    }
+    next();
+  });
+}, async (req: AuthRequest, res: Response) => {
   try {
     const auctionId = parseInt(req.params.id);
     if (isNaN(auctionId)) {

@@ -62,39 +62,51 @@ export default function CreateAuction() {
   };
 
   const onSubmit = async (data: CreateAuctionForm) => {
+    // Step 1: Create the auction
+    let newAuction;
     try {
-      // 1. Create Auction
-      const newAuction = await createAuction({
+      newAuction = await createAuction({
         data: {
           ...data,
-          // Ensure endTime is fully ISO formatted if browser cuts it
           endTime: new Date(data.endTime).toISOString()
         }
       });
+    } catch (err: any) {
+      const message = err?.data?.error || err?.message || "An unexpected error occurred.";
+      toast({
+        title: "Failed to create auction",
+        description: message,
+        variant: "destructive",
+      });
+      return;
+    }
 
-      // 2. Upload Image if exists
-      if (imageFile) {
+    // Step 2: Upload image separately — auction is already saved even if this fails
+    if (imageFile) {
+      try {
         await uploadImage({
           id: newAuction.id,
           data: { image: imageFile }
         });
+      } catch (err: any) {
+        const message = err?.data?.error || err?.message || "Image upload failed.";
+        toast({
+          title: "Auction created, but image upload failed",
+          description: message + " You can add an image later.",
+          variant: "destructive",
+        });
+        setLocation(`/auctions/${newAuction.id}`);
+        return;
       }
-
-      toast({
-        title: "Auction Created!",
-        description: "Your item is now live for bidding.",
-        variant: "default",
-      });
-      
-      setLocation(`/auctions/${newAuction.id}`);
-      
-    } catch (err: any) {
-      toast({
-        title: "Failed to create auction",
-        description: err.message || "An unexpected error occurred.",
-        variant: "destructive",
-      });
     }
+
+    toast({
+      title: "Auction Created!",
+      description: "Your item is now live for bidding.",
+      variant: "default",
+    });
+
+    setLocation(`/auctions/${newAuction.id}`);
   };
 
   const isPending = isCreating || isUploading;
