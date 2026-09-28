@@ -8,6 +8,11 @@ import { authenticateToken, optionalAuth, AuthRequest } from "../middleware/auth
 
 const router = Router();
 
+function firstParam(value: string | string[] | undefined): string {
+  if (value === undefined) return "";
+  return Array.isArray(value) ? (value[0] ?? "") : value;
+}
+
 const uploadsDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
@@ -184,7 +189,7 @@ router.post("/", authenticateToken, async (req: AuthRequest, res: Response) => {
 
 router.get("/:id", optionalAuth, async (req: Request, res: Response) => {
   try {
-    const auctionId = parseInt(req.params.id);
+    const auctionId = parseInt(firstParam(req.params.id), 10);
     if (isNaN(auctionId)) {
       res.status(400).json({ error: "Invalid auction ID" });
       return;
@@ -257,7 +262,7 @@ router.post("/:id/image", authenticateToken, (req: AuthRequest, res: Response, n
   });
 }, async (req: AuthRequest, res: Response) => {
   try {
-    const auctionId = parseInt(req.params.id);
+    const auctionId = parseInt(firstParam(req.params.id), 10);
     if (isNaN(auctionId)) {
       res.status(400).json({ error: "Invalid auction ID" });
       return;

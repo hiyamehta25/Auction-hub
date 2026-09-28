@@ -1,10 +1,14 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-const rawPort = process.env.PORT;
+const mode =
+  process.env.NODE_ENV === "production" ? "production" : "development";
+const env = loadEnv(mode, import.meta.dirname, "");
+
+const rawPort = env.PORT ?? process.env.PORT;
 
 if (!rawPort) {
   throw new Error(
@@ -18,13 +22,19 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-const basePath = process.env.BASE_PATH;
+const basePath = env.BASE_PATH ?? process.env.BASE_PATH;
 
 if (!basePath) {
   throw new Error(
     "BASE_PATH environment variable is required but was not provided.",
   );
 }
+
+// Local dev: forward /api to the API server (Replit routes /api separately in hosted env).
+const apiProxyTarget =
+  env.API_PROXY_TARGET ??
+  process.env.API_PROXY_TARGET ??
+  `http://127.0.0.1:${env.API_SERVER_PORT ?? process.env.API_SERVER_PORT ?? "8080"}`;
 
 export default defineConfig({
   base: basePath,
@@ -62,6 +72,12 @@ export default defineConfig({
     port,
     host: "0.0.0.0",
     allowedHosts: true,
+    proxy: {
+      "/api": {
+        target: apiProxyTarget,
+        changeOrigin: true,
+      },
+    },
     fs: {
       strict: true,
       deny: ["**/.*"],

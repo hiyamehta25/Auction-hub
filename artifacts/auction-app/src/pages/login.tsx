@@ -56,7 +56,7 @@ export default function Login() {
               {error && (
                 <div className="p-4 bg-destructive/10 text-destructive text-sm rounded-xl flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 shrink-0" />
-                  <p>{error.error || "Failed to login. Please check your credentials."}</p>
+                  <p>{error.message || "Failed to login. Please check your credentials."}</p>
                 </div>
               )}
 

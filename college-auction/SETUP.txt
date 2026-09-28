@@ -1,0 +1,28 @@
+Auction Hub — college stack (JSP + Node.js + MySQL)
+====================================================
+
+1) MySQL Workbench (local)
+   - Start MySQL Server.
+   - Connect as user: root, password: 0000 (or set your password and update files below).
+   - File → Open SQL Script → database/schema.sql → execute (lightning bolt).
+   - This creates database `auction_hub` and sample rows.
+
+2) Java web app (JSP + Servlets + JDBC)
+   - Edit jsp-webapp/src/main/resources/db.properties if your MySQL password is not 0000.
+   - From folder jsp-webapp run: mvn package
+   - Deploy target/auction-hub.war to Apache Tomcat 9+ (Java 11+).
+   - Open http://localhost:8080/auction-hub/ (path depends on Tomcat context name).
+
+3) Node.js API (Express + mysql2)
+   - From folder node-api copy .env.example to .env and adjust if needed.
+   - Run: npm install   then   npm start
+   - API: http://localhost:3000/health and http://localhost:3000/api/auctions/:id
+   - The auction detail JSP polls this API for “live” current price (CORS enabled).
+
+4) Demo logins (after running schema.sql)
+   - alice / demo
+   - bob / demo
+
+Note: Passwords are stored in plain text for coursework simplicity only — not for production.
+
+Optional: set environment variable NODE_API_URL when starting Tomcat if the browser must call a non-default API URL (default in JSP is http://localhost:3000).

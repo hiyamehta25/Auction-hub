@@ -26,7 +26,10 @@ export default function AuctionDetail() {
 
   // Polling every 3 seconds for real-time updates
   const { data, isLoading, error } = useGetAuction(auctionId, {
-    query: { refetchInterval: 3000 }
+    query: {
+      queryKey: getGetAuctionQueryKey(auctionId),
+      refetchInterval: 3000,
+    },
   });
 
   const { mutate: placeBid, isPending: isBidding } = usePlaceBid({
@@ -43,7 +46,7 @@ export default function AuctionDetail() {
       onError: (err) => {
         toast({
           title: "Bid Failed",
-          description: err.error || "Could not place bid. Please try again.",
+          description: err.message || "Could not place bid. Please try again.",
           variant: "destructive",
         });
       }
